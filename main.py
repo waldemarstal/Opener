@@ -60,15 +60,13 @@ class Opener(object):
             webbrowser.get(curr_choice).open_new_tab(self.url + line[3:-1])
         except Exception as e:
             print 'You have a problem with your browser.\n%s' % e
-        else:
-            webbrowser.open_new_tab(self.url + line[3:-1])
 
 
 def main():
     args = sys.argv
     if len(args) != 5:
         print 'Incorrect number of arguments! Try again.'
-        print 'python main.py file_name start count'
+        print 'python main.py browser file_name start count'
         sys.exit(0)
     browser, file_name, start, count = args[1], args[2], args[3], args[4]
     try:
