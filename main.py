@@ -23,10 +23,12 @@ class Opener(object):
         size = len(self.lines)
         if not size:
             raise Exception('Empty file!')
-        elif size < (self.start + 1):
+        if size < (self.start + 1):
             raise Exception(
                 'File have only %s lines! choose another start' % size)
-        elif self.count <= 0:
+        if self.start < 0:
+            raise Exception('start must be greater than 0')
+        if self.count <= 0:
             raise Exception('You can not open such an amount.')
 
     def open_file(self):
