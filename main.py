@@ -6,13 +6,21 @@ import webbrowser
 
 
 class Opener(object):
-    def __init__(self, file_name, start, count):
+    def __init__(self, browser, file_name, start, count):
         self.file = ''
+        self.browser = browser
         self.file_name = file_name
         self.start = int(start) - 1
         self.count = int(count)
         self.url = 'www.google.pl/#q='
         self.lines = []
+        self.browsers = dict(
+            firefox='firefox',
+            chrome='google-chrome',
+            opera='opera',
+            windows_default='windows-default',
+            safari='safari'
+        )
 
     def run(self):
         self.open_file()
@@ -30,6 +38,9 @@ class Opener(object):
             raise Exception('start must be greater than 0')
         if self.count <= 0:
             raise Exception('You can not open such an amount.')
+        if not self.browsers.get(self.browser):
+            raise Exception(
+                'Your choice is not available. Choose a different browser.')
 
     def open_file(self):
         self.file = open(self.file_name, 'r')
@@ -44,26 +55,28 @@ class Opener(object):
             self.open_in_browser(line)
 
     def open_in_browser(self, line):
+        curr_choice = self.browsers.get(self.browser)
         try:
-            webbrowser.open_new_tab(self.url + line[3:-1])
+            webbrowser.get(curr_choice).open_new_tab(self.url + line[3:-1])
         except Exception as e:
             print 'You have a problem with your browser.\n%s' % e
         else:
-            webbrowser.get('firefox').open_new_tab(self.url + line[3:-1])
+            webbrowser.open_new_tab(self.url + line[3:-1])
 
 
 def main():
     args = sys.argv
-    if len(args) != 4:
+    if len(args) != 5:
         print 'Incorrect number of arguments! Try again.'
         print 'python main.py file_name start count'
         sys.exit(0)
-    file_name, start, count = args[1], args[2], args[3]
+    browser, file_name, start, count = args[1], args[2], args[3], args[4]
     try:
-        opener = Opener(file_name, start, count)
+        opener = Opener(browser, file_name, start, count)
         opener.run()
     except Exception as e:
         print e
+
 
 if __name__ == '__main__':
     main()
